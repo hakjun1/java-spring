@@ -55,7 +55,7 @@ public class UserDao {
         PreparedStatement ps = null;
         try {
             c = connectionMaker.makeConnection();
-            ps = c.prepareStatement("delete from users");
+            ps = new DeleteAllstrategy().makePreparedStatement(c);
             ps.executeUpdate();
         } catch (SQLException e) {
         } finally {
