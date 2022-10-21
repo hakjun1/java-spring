@@ -18,16 +18,8 @@ public class UserDao {
 
 
     public void add(User user) throws SQLException {
-        Connection c=connectionMaker.makeConnection();
-        PreparedStatement ps = new Addstrategy().makePreparedStatement(c);
-
-        ps.setString(1,user.getId());
-        ps.setString(2,user.getName());
-        ps.setString(3,user.getPassword());
-
-        ps.executeUpdate();//이걸해야 실제로 기록
-        ps.close();
-        c.close();
+        Addstrategy addstrategy = new Addstrategy(user);
+        jdbcContextWithStatementStrategy(addstrategy);
     }
 
     public User select(String id) throws SQLException {
