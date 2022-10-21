@@ -19,7 +19,7 @@ public class UserDao {
 
     public void add(User user) throws SQLException {
         Connection c=connectionMaker.makeConnection();
-        PreparedStatement ps = c.prepareStatement("INSERT INTO users(id,name,password) values (?,?,?)");
+        PreparedStatement ps = new Addstrategy().makePreparedStatement(c);
 
         ps.setString(1,user.getId());
         ps.setString(2,user.getName());
@@ -50,12 +50,12 @@ public class UserDao {
         return user;
     }
 
-    public void deleteAll() throws SQLException {
+    public void jdbcContextWithStatementStrategy(StatementStrategy stmt) {
         Connection c = null;
         PreparedStatement ps = null;
         try {
             c = connectionMaker.makeConnection();
-            ps = new DeleteAllstrategy().makePreparedStatement(c);
+            ps = stmt.makePreparedStatement(c);
             ps.executeUpdate();
         } catch (SQLException e) {
         } finally {
@@ -75,6 +75,10 @@ public class UserDao {
         }
 
 
+    }
+
+    public void deleteAll() throws SQLException {
+        jdbcContextWithStatementStrategy(new DeleteAllstrategy());
 
     }
     public int getCount() throws SQLException {
